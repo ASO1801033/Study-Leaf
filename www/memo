@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      /*
+      var arr1 = [];
+      function tasu() {
+        localStorage.setItem('setting1', document.getElementById("username").value);
+        var hozon = localStorage.getItem('setting1');
+        window.alert(hozon);
+        arr1.push(hozon);
+        localStorage.setItem('arraydata', JSON.stringify(arr1));
+        var str = localStorage.getItem('arraydata');
+        var arrData = JSON.parse(str);
+        arr1.forEach(function out(item) {
+          window.alert(item);
+        });
+      }
+      */
+      // （1）Web Storageの実装確認
+if (typeof sessionStorage === 'undefined') {
+  window.alert("このブラウザはWeb Storage機能が実装されていません");
+} else {
+  window.alert("このブラウザはWeb Storage機能を実装しています");
+
+  var storage =  localStorage;
+
+  // （2）sessionStorageへの格納
+  function setsessionStorage() {
+
+    var key = document.getElementById("textkey").value;
+    var value = document.getElementById("textdata").value;
+
+    // 値の入力チェック
+    if (key && value) {
+      storage.setItem(key, value);
+    }
+
+    key = "";
+    value = "";
+
+    viewStorage();
+  }
+
+  // （3）sessionStorageからのデータの取得と表示
+  function viewStorage() {
+
+    var list = document.getElementById("list")
+    while (list.firstChild) list.removeChild(list.firstChild);
+
+    // sessionStorageすべての情報の取得
+    for (var i=0; i < storage.length; i++) {
+      var _key = storage.key(i);
+
+      // sessionStorageのキーと値を表示
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td");
+      var td2 = document.createElement("td");
+      list.appendChild(tr);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      td1.innerHTML = _key;
+      td2.innerHTML = storage.getItem(_key);
+    }
+  }
+
+  // （4）sessionStorageから削除
+  function removeStorage() {
+    var key = document.getElementById("textkey").value;
+    storage.removeItem(key);
+    key = "";
+    viewStorage();
+  }
+
+  // （5）sessionStorageからすべて削除
+  function removeallStorage() {
+    storage.clear();
+    viewStorage();
+  }
+
+}
+    </script>
+  </head>
+  <body onload="viewStorage();">
+    <div class="align">
+      <!--
+      <h1 id="title">Leaf 追加</h1>
+      <input type="text" id="username"><br>
+      <button onclick="tasu();">実験</button>
+      -->
+      <!--保存するKey：<input id="textkey" type="text" />
+  保存する値：<input id="textdata" type="text" />
+  <button id="button" onclick="setsessionStorage()">保存</button>
+  <button id="button" onclick="removeStorage()">削除</button>
+  <button id="button" onclick="removeallStorage()">全て削除</button>
+  <table border="1">
+    <tr>
+      <th>キー</th><th>値</th>
+    </tr>
+    <tbody id="list">
+    </tbody>
+  </table>-->
+    </div>
+  </body>
+</html>
