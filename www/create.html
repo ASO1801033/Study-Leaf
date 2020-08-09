@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <!-- https://blog.mbaas.nifcloud.com/entry/2018/01/31/105041 このリンクを見ながら確認する -->
+<!-- https://natsumo.github.io/MonacaGyomuApp/#77 -->
 <html>
   <head>
     <meta charset="utf-8">
@@ -46,12 +47,81 @@
           console.log("取得失敗:");
         });
       }
+
+      function insert_leaf(){
+        //insertの方法
+        //ニフクラに作成したクラス（テーブル）をnew
+        var leafData = ncmb.DataStore("leaf");
+        //リレーションデータの作成
+        var relation = new ncmb.Relation();
+        //リレーションにオブジェクトを設定
+        relation.add(new leafData({"objectid":subject_id}));
+        //インスタンスの生成
+        var leafDataClass = new leafData();
+
+        leafDataClass
+        .set("title", document.getElementById("title").value)
+        .set("detail", document.getElementById("detail").value)
+        //.set("subject_id", document.getElementById("subject_id").value)
+        .set("subject_id", relation)
+        .save()
+
+        .then(function(object){
+          //alert("保存成功:" + JSON.stringify(object));
+          alert("leafの登録ができました！");
+          window.open('tree.html'); //ページ遷移
+        })
+        .catch(function(error){
+          alert("保存失敗:" + JSON.stringify(error));
+        });
+      }
+
+      function select_subject(){
+        //selectの方法
+        var SubjectData = ncmb.DataStore("subject");
+        SubjectData.fetchAll()
+        .then(function(results){
+          //console.log("取得成功:" + JSON.stringify(results));
+          alert("取得成功:" + JSON.stringify(results));
+          //各項目にアクセスする際 はresults[0].username; という風にアクセス
+        })
+        .catch(function(error){
+          console.log("取得失敗:");
+        });
+      }
+
+      function select_leaf(){
+        //selectの方法
+        var LeafData = ncmb.DataStore("leaf");
+        LeafData.fetchAll()
+        .then(function(results){
+          //console.log("取得成功:" + JSON.stringify(results));
+          alert("取得成功:" + JSON.stringify(results));
+          //各項目にアクセスする際 はresults[0].username; という風にアクセス
+        })
+        .catch(function(error){
+          console.log("取得失敗");
+        })
+      }
     </script>
   </head>
   <body>
+    <!--
     なまえ<input type="text" id="username"><br>
     ぱすわーど<input type="password" id="pass"><br>
     <button onclick="clickFunc();">実験</button>
     <button onclick="kensaku();">けんさく</button>
+    <br><br>
+    -->
+
+    タイトル<br><input type="text" id="title"><br>
+    <!-- colsは入力幅、rowsは入力欄の高さ -->
+    ないよう<br><textarea id="detail" cols="30" rows="5"></textarea><br>
+    かもく<br><input type="text" id="subject_id" value="aaaa"><br>
+    <button onclick="insert_leaf()">とうろく</button>
+    <br><br>
+
+    <button onclick="select_subject()">とうろくかもくをひょうじ</button>
+    <button onclick="select_leaf()">とうろくleafをひょうじ</button>
   </body>
 </html>
