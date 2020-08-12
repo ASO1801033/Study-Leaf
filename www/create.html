@@ -50,21 +50,31 @@
 
       function insert_leaf(){
         //insertの方法
-        //ニフクラに作成したクラス（テーブル）をnew
-        var leafData = ncmb.DataStore("leaf");
+        //subjectクラスを生成
+        var subject = ncmb.DataStore("subject");
         //リレーションデータの作成
         var relation = new ncmb.Relation();
+        //関連付けする情報を作成
+        var subject_id = new subject({"objectId": subject_id});
         //リレーションにオブジェクトを設定
-        relation.add(new leafData({"objectid":subject_id}));
-        //インスタンスの生成
-        var leafDataClass = new leafData();
+        relation.add(subject_id);
 
-        leafDataClass
-        .set("title", document.getElementById("title").value)
-        .set("detail", document.getElementById("detail").value)
-        //.set("subject_id", document.getElementById("subject_id").value)
-        .set("subject_id", relation)
-        .save()
+        //登録するクラスを生成
+        var leafData = ncmb.DataStore("leaf");
+        var LeafDataClass = new leafData();
+        //参照権限の設定
+        var acl = new ncmb.Acl();
+        acl.setPublicReadAccess(true)
+           .setRoleReadAccess("admin", true)
+           .setRoleWriteAccess("admin", true);
+        //データを設定
+        LeafDataClass
+          .set("title", document.getElementById("title").value)
+          .set("detail", document.getElementById("detail").value)
+          //.set("subject_id", document.getElementById("subject_id").value)
+          .set("subject_id", relation) //リレーション
+          .set("acl", acl)
+          .save()
 
         .then(function(object){
           //alert("保存成功:" + JSON.stringify(object));
@@ -117,7 +127,17 @@
     タイトル<br><input type="text" id="title"><br>
     <!-- colsは入力幅、rowsは入力欄の高さ -->
     ないよう<br><textarea id="detail" cols="30" rows="5"></textarea><br>
-    かもく<br><input type="text" id="subject_id" value="aaaa"><br>
+    <!--かもく<br><input type="text" id="subject_id" value="lOQV1r41wErsIUGJ"><br>-->
+    かもく<br>
+    <select id="subject_id">
+      <option value="L9pEkVBAH8P7pFUA">こくご</option>
+      <option value="tc1wIZcDxwEmd46C">さんすう</option>
+      <option value="vMDSGGZIubYeVgkF">えいご</option>
+      <option value="732ZPjqGZh8K6mwE">しゃかい</option>
+      <option value="jZSHLqGooM9l7LcJ">りか</option>
+      <option value="lOQV1r41wErsIUGJ">てすと</option>
+    </select>
+    <br>
     <button onclick="insert_leaf()">とうろく</button>
     <br><br>
 
