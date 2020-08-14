@@ -50,47 +50,55 @@
 
       function insert_leaf(){
         //insertの方法
-        //subjectクラスを生成
-        var subject = ncmb.DataStore("subject");
-        //リレーションデータの作成
-        var relation = new ncmb.Relation();
-        //関連付けする情報を作成
-        var subject_id = new subject({"objectId": subject_id});
-        //リレーションにオブジェクトを設定
-        relation.add(subject_id);
+        if(document.getElementById("Subject_Select").value == "init" || 
+           document.getElementById("title").value == "" ||
+           document.getElementById("detail").value == "") {
+          alert("みにゅうりょくのこうもくがあります！");
+        }else {
+          //Subjectクラスを生成
+          var Subject = ncmb.DataStore("Subject");
+          //ポインタデータ作成
+          var pointer = new Subject({"objectId": document.getElementById("Subject_Select").value});
+          //Leafクラスを生成
+          var Leaf = ncmb.DataStore("Leaf");
+          //インスタンスを生成
+          var LeafData = new Leaf();
+          //データを設定
+          LeafData
+            .set("title", document.getElementById("title").value)
+            .set("detail", document.getElementById("detail").value)
+            .set("subject_id", pointer)
+            .save()
 
-        //登録するクラスを生成
-        var leafData = ncmb.DataStore("leaf");
-        var LeafDataClass = new leafData();
-        //参照権限の設定
-        var acl = new ncmb.Acl();
-        acl.setPublicReadAccess(true)
-           .setRoleReadAccess("admin", true)
-           .setRoleWriteAccess("admin", true);
-        //データを設定
-        LeafDataClass
-          .set("title", document.getElementById("title").value)
-          .set("detail", document.getElementById("detail").value)
-          //.set("subject_id", document.getElementById("subject_id").value)
-          .set("subject_id", relation) //リレーション
-          .set("acl", acl)
-          .save()
-
-        .then(function(object){
-          //alert("保存成功:" + JSON.stringify(object));
-          alert("leafの登録ができました！");
-          window.open('tree.html'); //ページ遷移
-        })
-        .catch(function(error){
-          alert("保存失敗:" + JSON.stringify(error));
-        });
+          /*
+          //登録するクラスを生成
+          var leafData = ncmb.DataStore("Leaf");
+          //インスタンスを生成
+          var LeafDataClass = new leafData();
+          //データを設定
+          LeafDataClass
+            .set("title", document.getElementById("title").value)
+            .set("detail", document.getElementById("detail").value)
+            .set("subject_id", document.getElementById("subject_id").value)
+            .save()
+          */
+          .then(function(object){
+            //alert("保存成功:" + JSON.stringify(object));
+            alert("leafの登録ができました！");
+            window.open('tree.html'); //ページ遷移
+          })
+          .catch(function(error){
+            alert("保存失敗:" + JSON.stringify(error));
+          });
+        }
       }
 
+      /*
       function select_subject(){
         //selectの方法
-        var SubjectData = ncmb.DataStore("subject");
+        var SubjectData = ncmb.DataStore("Subject");
         SubjectData.fetchAll()
-        .then(function(results){
+        .then(function(results){  
           //console.log("取得成功:" + JSON.stringify(results));
           alert("取得成功:" + JSON.stringify(results));
           //各項目にアクセスする際 はresults[0].username; という風にアクセス
@@ -99,10 +107,11 @@
           console.log("取得失敗:");
         });
       }
+      */
 
       function select_leaf(){
         //selectの方法
-        var LeafData = ncmb.DataStore("leaf");
+        var LeafData = ncmb.DataStore("Leaf");
         LeafData.fetchAll()
         .then(function(results){
           //console.log("取得成功:" + JSON.stringify(results));
@@ -127,21 +136,27 @@
     タイトル<br><input type="text" id="title"><br>
     <!-- colsは入力幅、rowsは入力欄の高さ -->
     ないよう<br><textarea id="detail" cols="30" rows="5"></textarea><br>
-    <!--かもく<br><input type="text" id="subject_id" value="lOQV1r41wErsIUGJ"><br>-->
-    かもく<br>
-    <select id="subject_id">
-      <option value="L9pEkVBAH8P7pFUA">こくご</option>
-      <option value="tc1wIZcDxwEmd46C">さんすう</option>
-      <option value="vMDSGGZIubYeVgkF">えいご</option>
-      <option value="732ZPjqGZh8K6mwE">しゃかい</option>
-      <option value="jZSHLqGooM9l7LcJ">りか</option>
-      <option value="lOQV1r41wErsIUGJ">てすと</option>
-    </select>
-    <br>
+    <!--かもく<br><input type="text" id="Subject_Select" value="lOQV1r41wErsIUGJ"><br>-->
+    かもく<br><select id="Subject_Select"></select><br><br>
+    <script>
+      //selectの方法
+        var SubjectData = ncmb.DataStore("Subject");
+        var item = '<option value="init">せんたくしましょう！</option>';
+        SubjectData.fetchAll()
+        .then(function(results){  
+          for(var i = 0; i < results.length; i++){
+            item += '<option value="' + results[i].objectId + '">' + results[i].name + '</option>';
+          }
+          document.getElementById('Subject_Select').innerHTML = item;
+        })
+        .catch(function(error){
+          console.log("科目を取得出来ませんでした：");
+        });
+    </script>
     <button onclick="insert_leaf()">とうろく</button>
     <br><br>
 
-    <button onclick="select_subject()">とうろくかもくをひょうじ</button>
+    <!--<button onclick="select_subject()">とうろくかもくをひょうじ</button>-->
     <button onclick="select_leaf()">とうろくleafをひょうじ</button>
   </body>
 </html>
