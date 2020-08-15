@@ -15,9 +15,9 @@
       var LeafData = ncmb.DataStore("Leaf");
         var item = '';
         LeafData.fetchAll()
-        .then(function(results){  
+        .then(function(results){
           for(var i = 0; i < results.length; i++){
-            item += '<img src="img/leaf_2.png" height="30" width="30">';
+            item += '<img src="img/leaf_2.png" height="30" width="30"><br>' + results[i].createDate + '<br>タイトル：' + results[i].title + '<br>ないよう：' + results[i].detail + '<br><br>';
           }
           document.getElementById('Leaf_Select').innerHTML = item;
         })
